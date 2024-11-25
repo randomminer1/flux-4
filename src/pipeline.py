@@ -19,7 +19,7 @@ def c(d):
  if d.get("h")==None:d["h"]=T5TokenizerFast.from_pretrained(a,subfolder="tokenizer_2")
 def i(j):
  if j.get("k")==None:
-  j["k"]=FluxTransformer2DModel.from_pretrained("/home/sandbox/.cache/huggingface/hub/models--black-forest-labs--FLUX.1-schnell/snapshots/741f7c3ce8b383c54771c7003378a50191e9efe9/transformer",low_cpu_mem_usage=True,torch_dtype=torch.bfloat16)
+  j["k"]=FluxTransformer2DModel.from_pretrained("/root/.cache/huggingface/hub/models--black-forest-labs--FLUX.1-schnell/snapshots/741f7c3ce8b383c54771c7003378a50191e9efe9/transformer",low_cpu_mem_usage=True,torch_dtype=torch.bfloat16)
   quantize_(j["k"],int8_weight_only(),device="cuda")
 def l(m):
  if m.get("n")==None:m["n"]=AutoencoderKL.from_pretrained(a,subfolder="vae",torch_dtype=torch.bfloat16).to("cuda")
