@@ -9,8 +9,11 @@ from huggingface_hub.constants import HF_HUB_CACHE
 from pipelines.models import TextToImageRequest
 from torch import Generator
 from transformers import T5EncoderModel, CLIPTextModel
+from para_attn.first_block_cache.diffusers_adapters import apply_cache_on_pipe
 
 Pipeline: TypeAlias = FluxPipeline
+
+os.environ['PYTORCH_CUDA_ALLOC_CONF']="expandable_segments:True"
 
 CHECKPOINT = "black-forest-labs/FLUX.1-schnell"
 REVISION = "741f7c3ce8b383c54771c7003378a50191e9efe9"
@@ -41,7 +44,7 @@ def load_pipeline() -> Pipeline:
         torch_dtype=torch.bfloat16,
     )
 
-    path = os.path.join(HF_HUB_CACHE, "models--RobertML--FLUX.1-schnell-int8wo/snapshots/307e0777d92df966a3c0f99f31a6ee8957a9857a")
+    path = os.path.join(HF_HUB_CACHE, "models--barneystinson--FLUX.1-schnell-int8wo/snapshots/b9fa75333f9319a48b411a2618f6f353966be599")
 
     transformer = FluxTransformer2DModel.from_pretrained(
         path,
@@ -59,6 +62,9 @@ def load_pipeline() -> Pipeline:
         vae=vae,
         torch_dtype=torch.bfloat16,
     ).to("cuda")
+    apply_cache_on_pipe(pipeline, residual_diff_threshold=0.5)
+
+    pipeline.transformer = torch.compile(pipeline.transformer, mode="max-autotune-no-cudagraphs")
 
     pipeline("")
 
