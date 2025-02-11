@@ -62,9 +62,9 @@ def load_pipeline() -> Pipeline:
         vae=vae,
         torch_dtype=torch.bfloat16,
     ).to("cuda")
-    apply_cache_on_pipe(pipeline, residual_diff_threshold=0.5)
-
     pipeline.transformer = torch.compile(pipeline.transformer, mode="max-autotune-no-cudagraphs")
+    apply_cache_on_pipe(pipeline, residual_diff_threshold=0.5)
+    
 
     pipeline("")
 
