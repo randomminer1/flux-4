@@ -1,0 +1,2 @@
+[console_scripts]
+start_inference = main:main
